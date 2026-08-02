@@ -65,7 +65,7 @@ Wirestate is not intended to replace application tests, a production state-manag
 Install the CLI globally:
 
 ```bash
-npm install --global wirestate
+npm install --global @alainux/wirestate
 ```
 
 Initialize and serve a project:
