@@ -40,7 +40,8 @@
     "example:smoke": "npm run build && node dist/cli.js smoke generate --cwd examples/habit-tracker --machine habits.app --out examples/habit-tracker/tests/generated.smoke.spec.ts",
     "example:build": "tsc -p examples/habit-tracker/tsconfig.json",
     "example:app": "npm run example:build && node examples/habit-tracker/scripts/serve.mjs",
-    "example:sync": "npm run example:build && node examples/habit-tracker/dist/sync-cli/index.js"
+    "example:sync": "npm run example:build && node examples/habit-tracker/dist/sync-cli/index.js",
+    "prepack": "npm run build"
   },
   "engines": {
     "node": ">=20"
