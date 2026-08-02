@@ -1,6 +1,6 @@
 {
   "name": "@alainux/wirestate",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Visual executable specifications using hierarchical state machines, interactive wireframes, and runtime verification.",
   "type": "module",
   "bin": {
