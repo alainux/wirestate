@@ -1,11 +1,12 @@
 {
-  "name": "wirestate",
+  "name": "@alainux/wirestate",
   "version": "0.3.0",
-  "description": "Visual, executable state-machine specifications for applications",
+  "description": "Visual executable specifications using hierarchical state machines, interactive wireframes, and runtime verification.",
   "type": "module",
   "bin": {
     "wirestate": "./dist/cli.js"
   },
+  "author": "alainux",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -52,5 +53,28 @@
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://alainux.github.io/wirestate",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alainux/wirestate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alainux/wirestate/issues"
+  },
+  "keywords": [
+    "state-machine",
+    "fsm",
+    "statechart",
+    "wireframe",
+    "prototype",
+    "specification",
+    "testing",
+    "playwright",
+    "verification",
+    "visualization",
+    "ai",
+    "agent",
+    "cli"
+  ]
 }
