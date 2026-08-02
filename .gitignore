@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+.wirestate/
+.DS_Store
+examples/habit-tracker/tests/generated.smoke.spec.ts
+
+examples/habit-tracker/data/export.json

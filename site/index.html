@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Wirestate is a visual, verifiable specification tool for agentic software development." />
+  <title>Wirestate — visual executable specifications</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <nav class="site-nav"><div class="nav-inner">
+    <a class="logo" href="./"><span class="logo-mark"><svg viewBox="0 0 24 24"><path d="M6 5.5 12 2l6 3.5v7L12 16l-6-3.5zM6 12.5 12 16v6m6-9.5L12 16"/></svg></span>Wirestate</a>
+    <div class="nav-links"><a href="#how">How it works</a><a href="#features">Features</a><a href="#faq">FAQ</a><a class="nav-cta" href="./docs/">Documentation</a></div>
+  </div></nav>
+
+  <header class="hero"><div class="hero-inner">
+    <div class="eyebrow">Specification-first agentic development</div>
+    <h1>Make intended behavior visible, executable, and hard to drift from.</h1>
+    <p class="hero-copy">Model an application as composable state machines and low-fidelity screens. Click through the prototype, generate against a deterministic contract, and verify the real application with test traces.</p>
+    <div class="hero-actions"><a class="button primary" href="./docs/#quick-start">Start in five minutes</a><a class="button secondary" href="./docs/#verification">Understand verification</a></div>
+    <div class="command"><span>$</span> npx wirestate serve --open</div>
+
+    <figure class="product-shot">
+      <img src="./assets/studio.png" width="1600" height="960" alt="Wirestate Studio showing the Habit chunks state machine beside its interactive dashboard wireframe" />
+      <figcaption>Captured from the runnable TypeScript habit-tracker fixture after its startup transition.</figcaption>
+    </figure>
+  </div></header>
+
+  <section class="content" id="how">
+    <div class="section-label">One reviewable loop</div><h2>From intent to evidence.</h2>
+    <p class="section-intro">Wirestate keeps desired behavior, the interactive prototype, source bindings, and observed test behavior connected through repository-native files.</p>
+    <div class="loop"><div class="loop-item"><strong>Model</strong><span>States and constraints</span></div><div class="loop-item"><strong>Prototype</strong><span>Clickable wireframes</span></div><div class="loop-item"><strong>Generate</strong><span>Structured agent context</span></div><div class="loop-item"><strong>Exercise</strong><span>Framework-neutral traces</span></div><div class="loop-item"><strong>Verify</strong><span>Conformance and coverage</span></div></div>
+  </section>
+
+  <section class="content" id="features">
+    <div class="section-label">Designed for real repositories</div><h2>A specification that participates in development.</h2>
+    <div class="feature-grid">
+      <article class="feature"><span class="feature-number">01</span><h3>Hierarchical machines</h3><p>Compose large products from nested state machines instead of forcing thousands of microstates into one flat graph.</p></article>
+      <article class="feature"><span class="feature-number">02</span><h3>Interactive wireframes</h3><p>Transition metadata makes buttons, toggles, and inputs operate the same machine interpreter used by the CLI.</p></article>
+      <article class="feature"><span class="feature-number">03</span><h3>Passive verification</h3><p>Compare states and edges observed by Playwright or any test runner with the behavior declared in the spec.</p></article>
+      <article class="feature"><span class="feature-number">04</span><h3>Source synchronization</h3><p>Stable data attributes, decorators, and comments reveal missing and unknown links in both directions.</p></article>
+      <article class="feature"><span class="feature-number">05</span><h3>Intent comments</h3><p>Attach acceptance criteria and rationale directly to states and components as readable YAML diffs.</p></article>
+      <article class="feature"><span class="feature-number">06</span><h3>Agent-ready context</h3><p>Give coding agents deterministic states, screens, interactions, bindings, and human constraints—not another ambiguous ticket.</p></article>
+    </div>
+  </section>
+
+  <section class="code-section"><div class="code-grid">
+    <div><div class="section-label">Diff-friendly by design</div><h2>The repository remains the source of truth.</h2><p class="section-intro">The browser is a synchronized surface over simple YAML. Every meaningful change can be reviewed, generated, replayed, and checked in CI.</p></div>
+    <div class="code-card"><header>src/shell/app.wire.yml</header><pre><span class="key">states</span>:
+  dashboard:
+    <span class="key">screen</span>: <span class="value">dashboard</span>
+    <span class="key">on</span>:
+      OPEN_ADD:
+        <span class="key">target</span>: <span class="value">adding</span>
+        <span class="key">interaction</span>:
+          <span class="key">kind</span>: <span class="value">click</span>
+          <span class="key">component</span>: <span class="value">habit.addButton</span>
+  adding:
+    <span class="key">screen</span>: <span class="value">adding</span>
+    <span class="comment"># Intent is explicit and reviewable.</span></pre></div>
+  </div></section>
+
+  <section class="content faq" id="faq">
+    <div class="section-label">FAQ</div><h2>Why this boundary?</h2>
+    <details open><summary>Why are generated views and artifacts not manually editable?</summary><p>Wirestate is built for specification-first, AI-driven development. The checked-in specification is authoritative; graphs, previews, generated tests, and scaffolds are derived. Directly editing derived output creates hidden, non-reproducible state that agents and reviewers cannot reliably interpret and that regeneration may overwrite.</p></details>
+    <details><summary>Can people still change the product specification?</summary><p>Yes. Humans and agents can change machines, screens, comments, and constraints through the filesystem, CLI, or specification-focused UI operations. The restriction applies to derived artifacts, not to authoring intent.</p></details>
+    <details><summary>Does Wirestate replace tests?</summary><p>No. It adds a behavioral contract and coverage model above test implementation. Tests still exercise the application; Wirestate checks whether their evidence agrees with the intended state graph and whether expected behavior remains unvisited.</p></details>
+    <details><summary>Does it catch visual regressions?</summary><p>The core focuses on behavior, reachability, bindings, and modeled coverage. Screenshot, accessibility-tree, and semantic DOM adapters can complement it without turning the DSL into a styling language.</p></details>
+  </section>
+
+  <footer class="site-footer"><div class="footer-inner"><span>Wirestate · visual executable specifications</span><span>Open source · MIT</span></div></footer>
+</body>
+</html>

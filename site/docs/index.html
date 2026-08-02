@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wirestate documentation</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <nav class="site-nav"><div class="nav-inner"><a class="logo" href="../"><span class="logo-mark"><svg viewBox="0 0 24 24"><path d="M6 5.5 12 2l6 3.5v7L12 16l-6-3.5zM6 12.5 12 16v6m6-9.5L12 16"/></svg></span>Wirestate</a><div class="nav-links"><a href="../">Home</a><a class="nav-cta" href="#quick-start">Quick start</a></div></div></nav>
+  <div class="docs-layout">
+    <aside class="docs-sidebar"><strong>Documentation</strong><a href="#concepts">Core concepts</a><a href="#quick-start">Quick start</a><a href="#dsl">DSL</a><a href="#interactions">Prototype interactions</a><a href="#verification">Verification</a><a href="#agentic">Agentic workflow</a><a href="#example">TypeScript example</a><a href="#cli">CLI</a><a href="#source-of-truth">Editing boundary</a><a href="#deploy">Deployment</a></aside>
+    <main class="docs-main">
+      <div class="section-label">Documentation</div><h1>Build and verify from one behavioral contract.</h1>
+      <p>Wirestate stores composable state machines, optional screens, interaction metadata, and human intent in simple YAML. The normalized project is plain JSON-compatible data that can be consumed by any language adapter.</p>
+
+      <h2 id="concepts">Core concepts</h2>
+      <h3>Machine</h3><p>A hierarchical finite state machine defines legal states and transitions. Nested machines let a repository model large applications without one enormous flat graph.</p>
+      <h3>Screen</h3><p>An optional low-fidelity layout attached to a state. Behavior-only services and CLI tools can omit screens entirely.</p>
+      <h3>Interaction</h3><p>Transition metadata links a component and interaction kind to a machine event. The local studio and CLI resolve that metadata through the same core interpreter.</p>
+      <h3>Trace</h3><p>A language-neutral stream of visited states, transitions, and touched components emitted by tests or the application under test.</p>
+
+      <h2 id="quick-start">Quick start</h2>
+      <pre>npm install
+npm run build
+node dist/cli.js check --cwd examples/habit-tracker
+node dist/cli.js serve --cwd examples/habit-tracker --open</pre>
+      <p>The studio opens with the state graph and interactive prototype side by side. Click the wireframe controls to follow legal transitions. Graph clicks inspect states; double-clicking performs an explicit runtime jump.</p>
+
+      <h2 id="dsl">A small DSL</h2>
+      <pre>wirestate: 1
+namespace: checkout
+
+machines:
+  app:
+    initial: cart
+    states:
+      cart:
+        screen: cart
+        on:
+          CHECK_OUT:
+            target: payment
+            interaction:
+              kind: click
+              component: checkout.submit
+      payment:
+        screen: payment
+
+screens:
+  cart:
+    root:
+      type: Container
+      children:
+        - type: Text
+          props: { text: Your cart }
+        - id: checkout.submit
+          type: Button
+          props: { label: Check out }</pre>
+      <p>Files can import other files, allowing machines, shared component templates, screens, and comments to live near the modules they describe.</p>
+
+      <h2 id="interactions">Prototype interactions</h2>
+      <p>The initial interaction kinds are <code>click</code>, <code>fill</code>, <code>toggle</code>, <code>submit</code>, <code>wait</code>, and <code>custom</code>. Buttons and toggles can immediately drive transitions. Text inputs retain local prototype values and can submit a <code>fill</code> transition with Enter.</p>
+      <div class="callout">The browser does not choose transitions independently. It sends the component and interaction kind to the core, which resolves the legal transition for the current hierarchical state.</div>
+      <pre>wirestate interact \
+  --machine checkout.app \
+  --state cart \
+  --component checkout.submit \
+  --kind click</pre>
+
+      <h2 id="verification">Conformance and coverage</h2>
+      <p><strong>Conformance</strong> rejects observed states or transitions that do not exist in the model. <strong>Coverage</strong> reports expected states and transitions that tests have not demonstrated. A project can conform while still having incomplete coverage, so CI policies should treat them separately.</p>
+      <pre>{"type":"state","machine":"checkout.app","state":"cart"}
+{"type":"transition","machine":"checkout.app","from":"cart","event":"CHECK_OUT","to":"payment"}
+{"type":"component","id":"checkout.submit","action":"click"}</pre>
+      <p>Run <code>wirestate check</code> to validate specs, scan source bindings in both directions, parse configured traces, and enforce coverage thresholds.</p>
+
+      <h2 id="agentic">Agentic development workflow</h2>
+      <p>A coding agent receives explicit desired states, allowed transitions, wireframe structure, stable component identifiers, comments, and prior verification evidence. A typical change becomes:</p>
+      <ol><li>Change the spec and review its filesystem diff.</li><li>Observe newly uncovered behavior in CI.</li><li>Generate or modify code against the normalized contract.</li><li>Exercise the application and collect traces.</li><li>Verify conformance, coverage, and source synchronization.</li></ol>
+
+
+      <h2 id="example">Colocated TypeScript example</h2>
+      <p>The included habit tracker is split by feature, with implementation and specification files living together. The browser application tracks measurable chunks against daily or weekly goals; a separate export CLI demonstrates a behavior-only machine that is still part of the same product repository.</p>
+      <pre>examples/habit-tracker/
+  src/shell/       app.ts + app.wire.yml
+  src/habits/      model.ts, store.ts + habits.wire.yml
+  src/goals/       progress.ts + goals.wire.yml
+  src/sync-cli/    index.ts + sync.wire.yml</pre>
+      <pre>npm run example:build
+npm run example:app
+npm run example:sync
+npm run example:check</pre>
+      <p>The app and CLI both emit the same JSON trace protocol, so the verifier remains independent of language and surface.</p>
+
+      <h2 id="cli">CLI surface</h2>
+      <pre>wirestate validate [--json]
+wirestate inspect [--json]
+wirestate graph [MACHINE] [--dot|--json]
+wirestate simulate --machine ID --events EVENT,EVENT
+wirestate jump --machine ID --state ID
+wirestate interact --machine ID --state ID --component ID --kind click
+wirestate sync [--json]
+wirestate coverage [TRACE...]
+wirestate check [--json]
+wirestate serve [--port PORT] [--open]
+wirestate comment list|add|update|remove
+wirestate smoke generate --machine ID --out FILE</pre>
+
+      <h2 id="source-of-truth">Why derived artifacts are not manually editable</h2>
+      <p>Wirestate is intentionally specification-first. The YAML specification is the source of truth; visual graphs, prototypes, generated tests, scaffolds, and reports are deterministic projections of it.</p>
+      <p>Manual edits to derived output cannot be reproduced, may be overwritten, and introduce ambiguity about what a coding agent should trust. Humans and agents should edit the specification or application source, then regenerate and verify derived artifacts.</p>
+      <div class="callout">This boundary does not remove human control. It moves control to reviewable intent rather than untracked modifications to generated output. The current studio writes specification comments; machine and screen structure remain filesystem-authored.</div>
+
+      <h2 id="deploy">Deployment</h2>
+      <h3>GitHub Pages</h3>
+      <p>The site is a static directory under <code>site/</code>. The included Pages workflow uploads that directory and deploys it on changes to <code>main</code>. Enable GitHub Actions as the Pages source in repository settings, then push or dispatch the workflow.</p>
+      <pre>python3 -m http.server 8080 --directory site</pre>
+      <h3>npm</h3>
+      <p>Confirm the final package name and repository metadata before the first public release. Verify the build and tarball before publishing.</p>
+      <pre>npm install
+npm run check
+npm pack --dry-run
+npm login
+npm publish --access public</pre>
+
+    </main>
+  </div>
+  <footer class="site-footer"><div class="footer-inner"><span>Wirestate documentation</span><span>MIT licensed</span></div></footer>
+</body>
+</html>

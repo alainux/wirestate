@@ -1,0 +1,177 @@
+wirestate: 1
+namespace: habits
+
+screens:
+  dashboard:
+    title: Habit dashboard
+    spec: The dashboard shows active goals and one direct route to creating another habit.
+    root:
+      use: Page
+      children:
+        - type: Container
+          layout:
+            direction: row
+            align: center
+            justify: between
+          children:
+            - use: Title
+            - id: habit.addButton
+              use: PrimaryButton
+              bind: component:habit.addButton
+              props:
+                label: Add habit
+        - type: Text
+          props:
+            variant: heading
+            text: This period
+        - id: habit.summary
+          type: List
+          bind: component:habit.summary
+          props:
+            items:
+              - Read · 3 of 5 sessions this week
+              - Walk · 2 of 3 ten-minute chunks today
+        - id: habit.openButton
+          type: Button
+          bind: component:habit.openButton
+          props:
+            label: Open Read goal
+
+  adding:
+    title: Create a habit goal
+    spec: Creation captures the smallest information set required to measure progress.
+    root:
+      use: Page
+      children:
+        - use: Title
+        - type: Modal
+          children:
+            - type: Text
+              props:
+                variant: heading
+                text: Create a habit goal
+            - id: habit.nameInput
+              type: TextInput
+              bind: component:habit.nameInput
+              props:
+                placeholder: e.g. Read
+            - id: habit.chunkInput
+              type: TextInput
+              bind: component:habit.chunkInput
+              props:
+                placeholder: e.g. 10 minutes
+            - id: habit.targetInput
+              type: TextInput
+              bind: component:habit.targetInput
+              props:
+                placeholder: Target chunks, e.g. 5
+            - id: habit.periodToggle
+              type: Toggle
+              bind: component:habit.periodToggle
+              props:
+                label: Weekly goal (off means daily)
+            - type: Container
+              layout:
+                direction: row
+                gap: 10
+                justify: end
+              children:
+                - id: habit.cancelButton
+                  type: Button
+                  bind: component:habit.cancelButton
+                  props:
+                    label: Cancel
+                - id: habit.saveButton
+                  use: PrimaryButton
+                  bind: component:habit.saveButton
+                  props:
+                    label: Save goal
+
+  detail:
+    title: Habit progress
+    spec: The detail view makes the denominator, period, and next action explicit.
+    root:
+      use: Page
+      children:
+        - type: Container
+          layout:
+            direction: row
+            align: center
+            justify: between
+          children:
+            - id: habit.backButton
+              type: Button
+              bind: component:habit.backButton
+              props:
+                label: Back
+            - use: Title
+        - type: Text
+          props:
+            variant: heading
+            text: Read
+        - type: Text
+          props:
+            text: 3 of 5 sessions this week · each chunk is 10 minutes
+        - id: habit.progress
+          type: List
+          bind: component:habit.progress
+          props:
+            items:
+              - Monday · 1 chunk
+              - Wednesday · 2 chunks
+        - id: habit.logButton
+          use: PrimaryButton
+          bind: component:habit.logButton
+          props:
+            label: Log progress
+        - id: habit.archiveButton
+          type: Button
+          bind: component:habit.archiveButton
+          props:
+            label: Archive habit
+
+  logging:
+    title: Log progress
+    spec: The normal path adds a chunk; the deterministic finish path demonstrates goal completion.
+    root:
+      use: Page
+      children:
+        - use: Title
+        - type: Modal
+          children:
+            - type: Text
+              props:
+                variant: heading
+                text: Log Read progress
+            - id: habit.chunkCountInput
+              type: TextInput
+              bind: component:habit.chunkCountInput
+              props:
+                placeholder: Number of chunks, e.g. 1
+            - type: Text
+              props:
+                text: One chunk equals 10 minutes.
+            - id: habit.saveChunkButton
+              use: PrimaryButton
+              bind: component:habit.saveChunkButton
+              props:
+                label: Add chunk
+            - id: habit.finishGoalButton
+              type: Button
+              bind: component:habit.finishGoalButton
+              props:
+                label: Add final chunk and reach goal
+            - id: habit.cancelLogButton
+              type: Button
+              bind: component:habit.cancelLogButton
+              props:
+                label: Cancel
+
+comments:
+  - id: c_goal_validation
+    target: component:habit.saveButton
+    body: Save remains disabled until name, chunk label, and a positive integer target are present.
+    author: product
+    status: open
+    createdAt: 2026-08-02T08:00:00.000Z
+    updatedAt: 2026-08-02T08:00:00.000Z

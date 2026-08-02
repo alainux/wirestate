@@ -1,0 +1,115 @@
+wirestate: 1
+namespace: habits
+
+machines:
+  app:
+    title: Habit chunks application
+    spec: Track repeatable habits as measurable chunks against a goal for a day or week.
+    bind: machine:habits.app
+    initial: loading
+    states:
+      loading:
+        spec: Restore locally saved habits before showing the dashboard.
+        bind: state:habits.app.loading
+        on:
+          LOADED:
+            target: ready
+            spec: Continue after local storage has been read.
+            wait:
+              timeoutMs: 2000
+              until:
+                state: habits.app.ready.dashboard
+      ready:
+        initial: dashboard
+        states:
+          dashboard:
+            screen: dashboard
+            spec: Summarize active habits and current-period progress.
+            bind: state:habits.app.ready.dashboard
+            on:
+              OPEN_ADD:
+                target: adding
+                interaction:
+                  kind: click
+                  component: habit.addButton
+              OPEN_HABIT:
+                target: detail
+                interaction:
+                  kind: click
+                  component: habit.openButton
+          adding:
+            screen: adding
+            spec: Capture a habit, chunk label, target amount, and period.
+            bind: state:habits.app.ready.adding
+            on:
+              CANCEL_ADD:
+                target: dashboard
+                interaction:
+                  kind: click
+                  component: habit.cancelButton
+              SAVE_HABIT:
+                target: dashboard
+                spec: Persist a valid goal and return to the dashboard.
+                interaction:
+                  kind: click
+                  component: habit.saveButton
+          detail:
+            screen: detail
+            spec: Show one habit's current progress and available actions.
+            bind: state:habits.app.ready.detail
+            on:
+              BACK:
+                target: dashboard
+                interaction:
+                  kind: click
+                  component: habit.backButton
+              OPEN_LOG:
+                target: logging
+                interaction:
+                  kind: click
+                  component: habit.logButton
+              ARCHIVE:
+                target: dashboard
+                interaction:
+                  kind: click
+                  component: habit.archiveButton
+          logging:
+            screen: logging
+            spec: Add one or more chunks without losing the current habit context.
+            bind: state:habits.app.ready.logging
+            on:
+              CANCEL_LOG:
+                target: detail
+                interaction:
+                  kind: click
+                  component: habit.cancelLogButton
+              SAVE_CHUNK:
+                target: detail
+                interaction:
+                  kind: click
+                  component: habit.saveChunkButton
+              REACH_GOAL:
+                target: celebrating
+                spec: A final chunk that reaches the period target opens a brief confirmation.
+                interaction:
+                  kind: click
+                  component: habit.finishGoalButton
+          celebrating:
+            screen: celebration
+            spec: Confirm the goal was reached without blocking continued tracking.
+            bind: state:habits.app.ready.celebrating
+            on:
+              DISMISS:
+                target: detail
+                interaction:
+                  kind: click
+                  component: habit.dismissButton
+
+comments:
+  - id: c_dashboard_tone
+    target: state:habits.app.ready.dashboard
+    body: Progress should be factual and encouraging; never shame a user for an incomplete period.
+    author: product
+    status: open
+    createdAt: 2026-08-02T08:01:00.000Z
+    updatedAt: 2026-08-02T08:01:00.000Z

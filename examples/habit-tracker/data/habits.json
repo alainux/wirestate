@@ -1,0 +1,11 @@
+[
+  {
+    "id": "read",
+    "name": "Read",
+    "chunkLabel": "10 minutes",
+    "targetChunks": 5,
+    "period": "week",
+    "archived": false,
+    "entries": []
+  }
+]

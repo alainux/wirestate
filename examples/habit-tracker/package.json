@@ -1,0 +1,10 @@
+{
+  "name": "wirestate-example-habit-tracker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "serve": "npm run build && node scripts/serve.mjs",
+    "sync": "npm run build && node dist/sync-cli/index.js"
+  }
+}

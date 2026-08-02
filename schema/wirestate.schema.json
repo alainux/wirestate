@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirestate.dev/schema/wirestate.schema.json",
+  "title": "Wirestate specification",
+  "type": "object",
+  "required": ["wirestate"],
+  "properties": {
+    "wirestate": { "const": 1 },
+    "namespace": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$" },
+    "imports": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "components": { "type": "object", "additionalProperties": { "$ref": "#/$defs/component" } },
+    "screens": { "type": "object", "additionalProperties": { "$ref": "#/$defs/screen" } },
+    "machines": { "type": "object", "additionalProperties": { "$ref": "#/$defs/machine" } },
+    "comments": { "type": "array", "items": { "$ref": "#/$defs/comment" } }
+  },
+  "anyOf": [
+    { "required": ["components"] },
+    { "required": ["screens"] },
+    { "required": ["machines"] }
+  ],
+  "$defs": {
+    "layout": {
+      "type": "object",
+      "properties": {
+        "direction": { "enum": ["row", "column"] },
+        "gap": { "type": "number", "minimum": 0 },
+        "padding": { "type": "number", "minimum": 0 },
+        "width": { "type": ["string", "number"] },
+        "height": { "type": ["string", "number"] },
+        "align": { "enum": ["start", "center", "end", "stretch"] },
+        "justify": { "enum": ["start", "center", "end", "between"] }
+      },
+      "additionalProperties": false
+    },
+    "component": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "enum": ["Container", "Text", "Button", "TextInput", "Image", "List", "Toggle", "Modal"] },
+        "use": { "type": "string" },
+        "bind": { "type": "string" },
+        "specs": { "type": "array", "items": { "type": "string" } },
+        "props": { "type": "object" },
+        "layout": { "$ref": "#/$defs/layout" },
+        "children": { "type": "array", "items": { "$ref": "#/$defs/component" } }
+      },
+      "oneOf": [
+        { "required": ["type"], "not": { "required": ["use"] } },
+        { "required": ["use"], "not": { "required": ["type"] } }
+      ],
+      "additionalProperties": false
+    },
+    "screen": {
+      "type": "object",
+      "required": ["root"],
+      "properties": {
+        "title": { "type": "string" },
+        "spec": { "type": "string" },
+        "root": { "$ref": "#/$defs/component" }
+      },
+      "additionalProperties": false
+    },
+    "wait": {
+      "type": "object",
+      "properties": {
+        "timeoutMs": { "type": "integer", "minimum": 0 },
+        "afterMs": { "type": "integer", "minimum": 0 },
+        "until": {
+          "type": "object",
+          "properties": {
+            "state": { "type": "string" },
+            "selector": { "type": "string" },
+            "text": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "interaction": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["click", "fill", "toggle", "submit", "wait", "custom"] },
+        "component": { "type": "string" },
+        "value": { "type": "string" },
+        "fixture": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "transitionObject": {
+      "type": "object",
+      "required": ["target"],
+      "properties": {
+        "target": { "type": "string" },
+        "spec": { "type": "string" },
+        "interaction": { "$ref": "#/$defs/interaction" },
+        "wait": { "$ref": "#/$defs/wait" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "transition": {
+      "oneOf": [
+        { "type": "string" },
+        { "$ref": "#/$defs/transitionObject" },
+        { "type": "array", "minItems": 1, "items": { "oneOf": [{ "type": "string" }, { "$ref": "#/$defs/transitionObject" }] } }
+      ]
+    },
+    "state": {
+      "type": "object",
+      "properties": {
+        "screen": { "type": "string" },
+        "spec": { "type": "string" },
+        "bind": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "initial": { "type": "string" },
+        "states": { "type": "object", "additionalProperties": { "$ref": "#/$defs/state" } },
+        "on": { "type": "object", "additionalProperties": { "$ref": "#/$defs/transition" } },
+        "machine": { "type": "string" }
+      },
+      "dependentRequired": { "states": ["initial"] },
+      "additionalProperties": false
+    },
+    "machine": {
+      "type": "object",
+      "required": ["initial", "states"],
+      "properties": {
+        "title": { "type": "string" },
+        "spec": { "type": "string" },
+        "initial": { "type": "string" },
+        "bind": { "type": "string" },
+        "states": { "type": "object", "minProperties": 1, "additionalProperties": { "$ref": "#/$defs/state" } }
+      },
+      "additionalProperties": false
+    },
+    "comment": {
+      "type": "object",
+      "required": ["id", "target", "body"],
+      "properties": {
+        "id": { "type": "string" },
+        "target": { "type": "string" },
+        "body": { "type": "string" },
+        "author": { "type": "string" },
+        "status": { "enum": ["open", "resolved"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

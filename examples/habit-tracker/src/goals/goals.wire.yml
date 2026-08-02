@@ -1,0 +1,25 @@
+wirestate: 1
+namespace: habits
+
+screens:
+  celebration:
+    title: Goal reached
+    spec: Completion acknowledges the period result and returns to tracking in one action.
+    root:
+      use: Page
+      children:
+        - use: Title
+        - type: Modal
+          children:
+            - type: Text
+              props:
+                variant: title
+                text: Goal reached
+            - type: Text
+              props:
+                text: You completed 5 of 5 reading sessions this week.
+            - id: habit.dismissButton
+              use: PrimaryButton
+              bind: component:habit.dismissButton
+              props:
+                label: Keep going

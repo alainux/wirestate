@@ -1,0 +1,32 @@
+wirestate: 1
+namespace: habits
+
+machines:
+  sync:
+    title: Habit export CLI
+    spec: A real command-line entry point that reads a habit snapshot, prepares an export, and reports the outcome.
+    bind: machine:habits.sync
+    initial: idle
+    states:
+      idle:
+        bind: state:habits.sync.idle
+        on:
+          START: reading
+      reading:
+        bind: state:habits.sync.reading
+        on:
+          READ_OK: uploading
+          READ_FAILED: failed
+      uploading:
+        bind: state:habits.sync.uploading
+        on:
+          SUCCESS: complete
+          FAILURE: failed
+      complete:
+        bind: state:habits.sync.complete
+        on:
+          RESET: idle
+      failed:
+        bind: state:habits.sync.failed
+        on:
+          RETRY: reading

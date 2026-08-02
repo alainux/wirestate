@@ -1,0 +1,36 @@
+wirestate: 1
+namespace: habits
+
+components:
+  Page:
+    type: Container
+    layout:
+      direction: column
+      gap: 18
+      padding: 22
+      width: 100%
+  Stack:
+    type: Container
+    layout:
+      direction: column
+      gap: 10
+  Row:
+    type: Container
+    layout:
+      direction: row
+      gap: 10
+      align: center
+  PrimaryButton:
+    type: Button
+    props:
+      label: Continue
+  Title:
+    type: Text
+    props:
+      variant: title
+      text: Habit chunks
+  SectionTitle:
+    type: Text
+    props:
+      variant: heading
+      text: Section

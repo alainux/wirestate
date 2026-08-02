@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Wirestate Studio</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Wirestate">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M6 5.5 12 2l6 3.5v7L12 16l-6-3.5zM6 12.5 12 16v6m6-9.5L12 16"/></svg>
+        </span>
+        <span class="brand-name">Wirestate</span>
+      </div>
+      <div class="breadcrumbs" aria-label="Current project">
+        <span id="project-name">Project</span><span class="crumb-separator">/</span><strong id="machine-name">Loading…</strong>
+      </div>
+      <div class="topbar-status">
+        <svg class="status-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v5h5"/></svg><span id="project-meta">Loading specification…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="ghost-button" id="reset-button" title="Reset the simulation to its initial state">
+          <svg viewBox="0 0 24 24"><path d="M4 4v6h6M5.3 15a8 8 0 1 0 .8-8.1L4 10"/></svg><span>Reset</span>
+        </button>
+        <button class="primary-button" id="reload-button">
+          <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg><span>Reload</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="navigation-panel">
+        <section class="nav-section machines-section">
+          <div class="section-heading"><span>Machines</span><span id="machine-count" class="count-badge">0</span></div>
+          <div id="machine-list" class="machine-list"></div>
+        </section>
+        <section class="nav-section state-section">
+          <div class="section-heading"><span>State hierarchy</span><span class="keyboard-hint">click to inspect</span></div>
+          <div id="state-tree" class="state-tree"></div>
+        </section>
+        <div class="nav-footer">
+          <div class="nav-footer-label">Current runtime state</div>
+          <code id="runtime-state">—</code>
+        </div>
+      </aside>
+
+      <section class="studio">
+        <div class="studio-header">
+          <div>
+            <div class="eyebrow">Visual executable specification</div>
+            <h1 id="studio-title">State machine</h1>
+          </div>
+          <div class="studio-header-actions">
+            <button class="icon-button" id="center-button" title="Center the current state">
+              <svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M8 21H3v-5m13 5h5v-5"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="split-workspace">
+          <section class="workspace-pane graph-pane" aria-labelledby="graph-heading">
+            <header class="pane-header">
+              <div>
+                <span class="pane-kicker">Behavior</span>
+                <h2 id="graph-heading">State machine</h2>
+              </div>
+              <div class="pane-tools">
+                <button class="tool-button" id="zoom-out" title="Zoom out">−</button>
+                <span id="zoom-label" class="zoom-label">100%</span>
+                <button class="tool-button" id="zoom-in" title="Zoom in">+</button>
+              </div>
+            </header>
+            <div class="graph-viewport" id="graph-viewport">
+              <div id="graph-surface" class="graph-surface">
+                <div id="graph-world" class="graph-world"></div>
+              </div>
+            </div>
+            <footer class="pane-footer graph-legend">
+              <span><i class="legend-dot current"></i>Current</span>
+              <span><i class="legend-dot selected"></i>Selected</span>
+              <span><i class="legend-line"></i>Transition</span>
+              <span class="footer-note">Double-click a state to jump</span>
+            </footer>
+          </section>
+
+          <section class="workspace-pane prototype-pane" aria-labelledby="prototype-heading">
+            <header class="pane-header">
+              <div>
+                <span class="pane-kicker">Experience</span>
+                <h2 id="prototype-heading">Interactive wireframe</h2>
+              </div>
+              <span id="screen-title" class="screen-badge">No screen</span>
+            </header>
+            <div class="prototype-stage">
+              <div class="device-frame">
+                <div class="device-bar"><span></span><span></span><span></span><strong id="device-title">Prototype</strong></div>
+                <div id="prototype-canvas" class="prototype-canvas"></div>
+              </div>
+            </div>
+            <footer class="pane-footer event-strip">
+              <span class="event-strip-label">Available events</span>
+              <div id="event-buttons" class="event-buttons"></div>
+            </footer>
+          </section>
+        </div>
+      </section>
+
+      <aside class="inspector-panel">
+        <header class="inspector-header">
+          <div><span class="pane-kicker">Selection</span><h2 id="selection-title">Details</h2></div>
+          <button class="icon-button" id="comment-focus-button" title="Open comments">
+            <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>
+          </button>
+        </header>
+        <div class="inspector-scroll">
+          <section id="details-panel" class="details-panel"></section>
+          <section class="comments-section" id="comments-section">
+            <div class="section-heading comments-heading"><span>Specification comments</span><span id="comment-count" class="count-badge">0</span></div>
+            <div id="comment-target" class="comment-target">Select a state or component.</div>
+            <div id="comment-list" class="comment-list"></div>
+            <form id="comment-form" class="comment-form">
+              <textarea id="comment-body" rows="4" placeholder="Describe the expected behavior…" disabled></textarea>
+              <button type="submit" disabled>Add to specification</button>
+            </form>
+          </section>
+        </div>
+      </aside>
+    </main>
+  </div>
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

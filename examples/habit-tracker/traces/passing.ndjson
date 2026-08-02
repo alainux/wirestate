@@ -1,0 +1,35 @@
+{"type":"state","machine":"habits.app","state":"loading","test":"startup"}
+{"type":"transition","machine":"habits.app","from":"loading","event":"LOADED","to":"ready.dashboard","test":"startup"}
+{"type":"state","machine":"habits.app","state":"ready.dashboard","test":"dashboard"}
+{"type":"transition","machine":"habits.app","from":"ready.dashboard","event":"OPEN_ADD","to":"ready.adding","test":"create habit"}
+{"type":"state","machine":"habits.app","state":"ready.adding","test":"create habit"}
+{"type":"transition","machine":"habits.app","from":"ready.adding","event":"CANCEL_ADD","to":"ready.dashboard","test":"cancel creation"}
+{"type":"transition","machine":"habits.app","from":"ready.adding","event":"SAVE_HABIT","to":"ready.dashboard","test":"create habit"}
+{"type":"transition","machine":"habits.app","from":"ready.dashboard","event":"OPEN_HABIT","to":"ready.detail","test":"open habit"}
+{"type":"state","machine":"habits.app","state":"ready.detail","test":"habit detail"}
+{"type":"transition","machine":"habits.app","from":"ready.detail","event":"BACK","to":"ready.dashboard","test":"back to dashboard"}
+{"type":"transition","machine":"habits.app","from":"ready.detail","event":"OPEN_LOG","to":"ready.logging","test":"log progress"}
+{"type":"transition","machine":"habits.app","from":"ready.detail","event":"ARCHIVE","to":"ready.dashboard","test":"archive habit"}
+{"type":"state","machine":"habits.app","state":"ready.logging","test":"log progress"}
+{"type":"transition","machine":"habits.app","from":"ready.logging","event":"CANCEL_LOG","to":"ready.detail","test":"cancel log"}
+{"type":"transition","machine":"habits.app","from":"ready.logging","event":"SAVE_CHUNK","to":"ready.detail","test":"log progress"}
+{"type":"transition","machine":"habits.app","from":"ready.logging","event":"REACH_GOAL","to":"ready.celebrating","test":"reach goal"}
+{"type":"state","machine":"habits.app","state":"ready.celebrating","test":"reach goal"}
+{"type":"transition","machine":"habits.app","from":"ready.celebrating","event":"DISMISS","to":"ready.detail","test":"dismiss celebration"}
+{"type":"component","id":"habit.addButton","action":"click","test":"create habit"}
+{"type":"component","id":"habit.saveButton","action":"click","test":"create habit"}
+{"type":"component","id":"habit.openButton","action":"click","test":"open habit"}
+{"type":"component","id":"habit.logButton","action":"click","test":"log progress"}
+{"type":"component","id":"habit.finishGoalButton","action":"click","test":"reach goal"}
+{"type":"state","machine":"habits.sync","state":"idle","test":"sync success"}
+{"type":"transition","machine":"habits.sync","from":"idle","event":"START","to":"reading","test":"sync success"}
+{"type":"state","machine":"habits.sync","state":"reading","test":"sync success"}
+{"type":"transition","machine":"habits.sync","from":"reading","event":"READ_OK","to":"uploading","test":"sync success"}
+{"type":"state","machine":"habits.sync","state":"uploading","test":"sync success"}
+{"type":"transition","machine":"habits.sync","from":"uploading","event":"SUCCESS","to":"complete","test":"sync success"}
+{"type":"state","machine":"habits.sync","state":"complete","test":"sync success"}
+{"type":"transition","machine":"habits.sync","from":"complete","event":"RESET","to":"idle","test":"sync reset"}
+{"type":"transition","machine":"habits.sync","from":"reading","event":"READ_FAILED","to":"failed","test":"sync read failure"}
+{"type":"state","machine":"habits.sync","state":"failed","test":"sync failure"}
+{"type":"transition","machine":"habits.sync","from":"failed","event":"RETRY","to":"reading","test":"sync retry"}
+{"type":"transition","machine":"habits.sync","from":"uploading","event":"FAILURE","to":"failed","test":"sync upload failure"}

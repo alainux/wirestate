@@ -1,0 +1,20 @@
+specs:
+  - src/spec.wire.yml
+source:
+  - src/**/*.ts
+  - src/**/*.html
+ignore:
+  - node_modules/**
+  - dist/**
+  - .wirestate/**
+trace:
+  - traces/**/*.ndjson
+strict:
+  bindings: true
+  comments: false
+coverage:
+  states: 100
+  transitions: 100
+server:
+  port: 4177
+  open: false

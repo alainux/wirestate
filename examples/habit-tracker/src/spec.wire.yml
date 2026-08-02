@@ -1,0 +1,8 @@
+wirestate: 1
+namespace: habits
+imports:
+  - shared/components.wire.yml
+  - shell/app.wire.yml
+  - habits/habits.wire.yml
+  - goals/goals.wire.yml
+  - sync-cli/sync.wire.yml
